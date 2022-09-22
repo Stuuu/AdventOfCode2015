@@ -38,9 +38,14 @@ class Solution
         foreach ($input_parts as $key => $char) {
             if ($char === '(') {
                 $floor++;
-                continue;
-            };
-            $floor--;
+            }else{
+                $floor--;
+            }
+
+            if ($floor === -1) {
+                echo $key + 1 . PHP_EOL;
+                die;
+            }
         }
         print_r($floor);
     }
