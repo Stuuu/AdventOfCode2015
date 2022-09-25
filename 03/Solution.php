@@ -13,6 +13,19 @@
 // ^>v< delivers presents to 4 houses in a square, including twice to the house at his starting/ending location.
 // ^v^v^v^v^v delivers a bunch of presents to some very lucky children at only 2 houses.
 
+// --- Part Two ---
+// The next year, to speed up the process, Santa creates a robot version of himself, Robo-Santa, to deliver presents with him.
+
+// Santa and Robo-Santa start at the same location (delivering two presents to the same starting house), then take turns moving based on instructions from the elf, who is eggnoggedly reading from the same script as the previous year.
+
+// This year, how many houses receive at least one present?
+
+// For example:
+
+// ^v delivers presents to 3 houses, because Santa goes north, and then Robo-Santa goes south.
+// ^>v< now delivers presents to 3 houses, and Santa and Robo-Santa end up back where they started.
+// ^v^v^v^v^v now delivers presents to 11 houses, with Santa going one direction and Robo-Santa going the other.
+
 
 class Solution
 
@@ -32,30 +45,59 @@ class Solution
         ];
         $x = 0;
         $y = 0;
+
+        $r_x = 0;
+        $r_y = 0;
         foreach ($steps as $key => $step) {
+
+            if ($key % 2 !== 0) {
+                $robo_santa = true;
+            } else {
+                $robo_santa = false;
+            }
+
             switch ($step) {
                 case '^':
-                    $y++;
+                    if ($robo_santa) {
+                        $r_y++;
+                    } else {
+                        $y++;
+                    }
                     break;
                 case '>':
-                    $x++;
+                    if ($robo_santa) {
+                        $r_x++;
+                    } else {
+                        $x++;
+                    }
                     break;
                 case 'v':
-                    $y--;
+                    if ($robo_santa) {
+                        $r_y--;
+                    } else {
+                        $y--;
+                    }
                     break;
                 case '<':
-                    $x--;
+                    if ($robo_santa) {
+                        $r_x--;
+                    } else {
+                        $x--;
+                    }
                     break;
                 default:
                     break;
             }
 
-            $house_visits[$x . "," . $y] = 1;
+            if ($robo_santa) {
+                $house_visits[$r_x . "," . $r_y] = 1;
+            } else {
+                $house_visits[$x . "," . $y] = 1;
+            }
         }
 
         echo count($house_visits) . PHP_EOL;
     }
-
 }
 
 (new Solution())->run();
