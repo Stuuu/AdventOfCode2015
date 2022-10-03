@@ -18,14 +18,20 @@
 
 // For example, given the four strings above, the total number of characters of string code (2 + 5 + 10 + 6 = 23) minus the total number of characters in memory for string values (0 + 3 + 7 + 1 = 11) is 23 - 11 = 12.
 
+// --- Part Two ---
+// Now, let's go the other way. In addition to finding the number of characters of code, you should now encode each code representation as a new string and find the number of characters of the new encoded representation, including the surrounding double quotes.
+
+// For example:
+
+// "" encodes to "\"\"", an increase from 2 characters to 6.
+// "abc" encodes to "\"abc\"", an increase from 5 characters to 9.
+// "aaa\"aaa" encodes to "\"aaa\\\"aaa\"", an increase from 10 characters to 16.
+// "\x27" encodes to "\"\\x27\"", an increase from 6 characters to 11.
+// Your task is to find the total number of characters to represent the newly encoded strings minus the number of characters of code in each original string literal. For example, for the strings above, the total encoded length (6 + 9 + 16 + 11 = 42) minus the characters in the original code representation (23, just like in the first part of this puzzle) is 42 - 23 = 19.
+
 class Solution
 
 {
-    const ESCAPE_SEQS = [
-        '\\',
-        '\"',
-        '\x',
-    ];
     public function run()
     {
 
@@ -34,39 +40,18 @@ class Solution
 
 
         $total_unescaped_count = 0;
-        $string_lit_char_count = 0;
+        $escaped_total_count = 0;
         foreach ($inputs as $key => $string) {
             $string = trim($string);
-            $string_length = strlen($string);
-            $total_unescaped_count += $string_length;
-            $string_parts = str_split($string);
-
-
-            echo $string . PHP_EOL;
-            $word_char_count = 0;
-            for ($i = 1; $i < ($string_length - 1);) {
-
-                $part = $string_parts[$i];
-                $word_char_count++;
-                switch ($part) {
-                    case '\\':
-                        if ($string_parts[$i + 1] === 'x') {
-                            $i += 4;
-                        } else {;
-                            $i += 2;
-                        }
-                        break;
-                    default:
-                        $i++;
-                        break;
-                }
-            }
-            $string_lit_char_count += $word_char_count;
+            $total_unescaped_count += strlen($string);
+            $with_slashes  = addslashes($string);
+            $escaped_total_count += (strlen($with_slashes) + 2); // 2 is accouning for the original double ""s
+            continue;
         }
 
         echo 'total: ' . $total_unescaped_count . PHP_EOL;
-        echo 'chars: ' . $string_lit_char_count . PHP_EOL;
-        echo 'diff: ' . $total_unescaped_count - $string_lit_char_count . PHP_EOL;
+        echo 'chars: ' . $escaped_total_count . PHP_EOL;
+        echo 'diff: ' .$escaped_total_count  -$total_unescaped_count  . PHP_EOL;
     }
 }
 
